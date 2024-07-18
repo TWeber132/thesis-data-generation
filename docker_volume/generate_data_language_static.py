@@ -37,7 +37,7 @@ def main(cfg):
     if seed < 0:
         if task.mode == 'train':
             seed = -2
-        elif task.mode == 'valid':  # NOTE: beware of increasing val set to >100
+        elif task.mode == 'valid':
             seed = -1
         elif task.mode == 'test':
             seed = -1 + 10000
@@ -61,7 +61,7 @@ def main(cfg):
         random.seed(seed)
 
         env.set_task(task)
-        # Hard reset environment
+        # Reset environment
         # NOTE: diconnects bullet client to clear memory leakage from "p.loadTexture" inside task.reset()
         env.reset()
 
@@ -70,7 +70,6 @@ def main(cfg):
                 'Oracle demo: {}/{} | Seed: {} | Try: {}/{}'.format(len(synchronized_dataset) + 1, cfg['n'], seed, task.idx_random_pose + 1, task.n_random_poses))
             # Get initial observation right after restoration of environment
             obs, info = env.restore()
-            # If color tuple of obs is not empty
             if obs is not None:
                 valid_obs = obs
             if info is not None:

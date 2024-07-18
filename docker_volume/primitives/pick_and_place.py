@@ -3,9 +3,8 @@ import numpy as np
 
 
 class Pick(Primitive):
-    def __init__(self, at_key: str = "pose0") -> None:
+    def __init__(self) -> None:
         self.type = "pick"
-        self.at_key = at_key
         self.app_height = 0.45
         self.pre_height = 0.10
         self.trajectory = []
@@ -54,24 +53,27 @@ class Pick(Primitive):
 
 
 class Place(Primitive):
-    def __init__(self, at_key: str = "pose0") -> None:
+    def __init__(self) -> None:
         self.type = "place"
-        self.at_key = at_key
-        self.height = 0.45
+        self.app_height = 0.45
+        self.pre_height = 0.10
         self.trajectory = []
 
     def __call__(self, robot, action) -> bool:
-        place_position = np.array(action[self.at_key][0], dtype=np.float32)
-        approach_position = np.array((action[self.at_key][0][0],
-                                      action[self.at_key][0][1],
-                                      action[self.at_key][0][2] + self.height),
-                                     dtype=np.float32)
-        rot = np.float32((1.0, 1.0, 0.0, 0.0))
+        if len(action) != 1:
+            raise ValueError(
+                "Action for pick primitive has to contain only one [pick]pose")
+        place_pos = np.array(action[0][0], dtype=np.float32)
+        place_rot = np.array(action[0][1], dtype=np.float32)
+        app_pos = place_pos + np.array([0.0, 0.0, self.app_height])
+        app_rot = np.array([0.707, 0.707, 0.0, 0.0])
+        pre_pos = place_pos + np.array([0.0, 0.0, self.pre_height])
+        pre_rot = place_rot
 
-        timeout = robot.movep((approach_position, rot), speed=0.001)
-        timeout |= robot.movep((place_position, rot), speed=0.001)
+        timeout = robot.movep((app_pos, app_rot), speed=0.001)
+        timeout |= robot.movep((place_pos, place_rot), speed=0.001)
         timeout |= robot.ee.open()
-        timeout |= robot.movep((approach_position, rot), speed=0.001)
+        timeout |= robot.movep((app_pos, app_rot), speed=0.001)
         return timeout
 
 
