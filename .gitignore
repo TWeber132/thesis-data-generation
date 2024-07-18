@@ -1,0 +1,15 @@
+*.pyc
+*.log
+.hydra/
+0_VRDemoSettings.txt
+datasets/
+__pycache__/
+
+# Don't ignore important assets
+docker_volume/environments/assets/*
+!docker_volume/environments/assets/robot/
+!docker_volume/environments/assets/meshes/
+!docker_volume/environments/assets/google/
+docker_volume/environments/assets/google/meshes/
+docker_volume/environments/assets/google/meshes_fixed/
+docker_volume/environments/assets/google/textures/
