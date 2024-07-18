@@ -11,7 +11,7 @@ from environments.environment import Environment
 from tasks.utils import get_matrix
 
 
-@hydra.main(config_path='/home/robot/shared_docker_volume/configs', config_name='data')
+@hydra.main(config_path='/home/robot/docker_volume/configs', config_name='data')
 def main(cfg):
     # Initialize environment and task.
     env = Environment(
