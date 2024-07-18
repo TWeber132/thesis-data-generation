@@ -6,7 +6,7 @@ import numpy as np
 import random
 
 import tasks
-from datasets.dataset import store_to_dataset_nerf, load_dataset_nerf
+from dataset.dataset import store_to_dataset_nerf, load_dataset_nerf
 from environments.environment import Environment
 from tasks.utils import get_matrix
 
