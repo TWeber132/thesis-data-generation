@@ -127,7 +127,7 @@ class Environment(gym.Env):
             target = p.getDebugVisualizerCamera()[11]
             p.resetDebugVisualizerCamera(
                 cameraDistance=1.1,
-                cameraYaw=90,
+                cameraYaw=0,
                 cameraPitch=-25,
                 cameraTargetPosition=target)
 
@@ -254,7 +254,7 @@ class Environment(gym.Env):
 
         # OpenGL camera settings.
         lookdir = np.float32([0, 0, 1]).reshape(3, 1)
-        updir = np.float32([0, -1, 0]).reshape(3, 1)
+        updir = np.float32([0, 1, 0]).reshape(3, 1)
         rotation = p.getMatrixFromQuaternion(config['rotation'])
         rotm = np.float32(rotation).reshape(3, 3)
         lookdir = (rotm @ lookdir).reshape(-1)

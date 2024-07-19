@@ -51,6 +51,52 @@ class Pick(Primitive):
         self.trajectory.extend(
             [traj for traj in robot_last_trajectory[idx]])
 
+    def get_action_names(self):
+        return {
+            'train': [
+                'pick up',
+                'grasp',
+                'take',
+                'lift',
+                'fetch',
+                'collect',
+                'grab',
+                'go get',
+                'get',
+                'raise',
+                'obtain',
+                'hold'
+            ],
+            'valid': [
+                'pick up',
+                'grasp',
+                'take',
+                'lift',
+                'fetch',
+                'collect',
+                'grab',
+                'go get',
+                'get',
+                'raise',
+                'obtain',
+                'hold'
+            ],
+            'test': [
+                'pick up',
+                'grasp',
+                'take',
+                'lift',
+                'fetch',
+                'collect',
+                'grab',
+                'go get',
+                'get',
+                'raise',
+                'obtain',
+                'hold'
+            ]
+        }
+
 
 class Place(Primitive):
     def __init__(self) -> None:

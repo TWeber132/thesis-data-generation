@@ -2,6 +2,8 @@ import os
 import time
 import numpy as np
 import pybullet as p
+from scipy.ndimage import rotate
+
 
 from environments.pybullet_utils import JointInfo
 
@@ -30,6 +32,7 @@ class Robotiq140():
                            childFramePosition=(0, 0, 0))
 
         self.closed = False
+        self.gripper_filter = self.create_gripper_filter()
         self.leading_joint_range = [0.0, 0.7]
         self.homej = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
@@ -80,7 +83,7 @@ class Robotiq140():
                                    parentFramePosition=[0, 0, 0],
                                    childFramePosition=[0, 0, 0])
             # Note: the mysterious `erp` is of EXTREME importance
-            p.changeConstraint(c, gearRatio=multiplier, maxForce=100, erp=1)
+            p.changeConstraint(c, gearRatio=multiplier, maxForce=10000, erp=1)
 
         # Enable joint force-torque sensor in leading joint
         p.enableJointForceTorqueSensor(bodyUniqueId=self.uid,
@@ -109,6 +112,11 @@ class Robotiq140():
                 abs(curr_my_right) + abs(curr_mz_right)
 
             if (sum_curr_m_left > targ_m) or (sum_curr_m_right > targ_m):
+                while True:
+                    qKey = ord('q')
+                    keys = p.getKeyboardEvents()
+                    if qKey in keys and keys[qKey] & p.KEY_WAS_TRIGGERED:
+                        break
                 return False
             p.setJointMotorControl2(bodyUniqueId=self.uid,
                                     jointIndex=self.leading_joint_id,
@@ -186,3 +194,30 @@ class Robotiq140():
     def reset(self):
         for i in range(self.n_joints):
             p.resetJointState(self.uid, self.joints_info[i].id, self.homej[i])
+
+    def create_gripper_filter(self):
+        # NOTE: width and height have to be odd
+        gripper_width_px = 41
+        gripper_height_px = 7
+        # Max possible width of image if rotated by 45 degrees
+        pad_to = int(gripper_width_px * np.sqrt(2)) + 1
+        # NOTE: pad_to has to be odd, so we have a center point to rotate around
+        if pad_to % 2 == 0:
+            pad_to += 1
+        pad_w_by = pad_to - gripper_width_px # Will always be even
+        pad_h_by = pad_to - gripper_height_px
+
+        gripper_filter = np.zeros(
+            (gripper_height_px, gripper_width_px), dtype=np.int32)
+        gripper_filter[gripper_height_px // 2,
+                       gripper_width_px // 2] = 1
+        gripper_filter[:, 0] = -255
+        gripper_filter[:, -1] = -255
+        gripper_filter = np.pad(gripper_filter, ((
+            pad_h_by // 2, pad_h_by // 2), (pad_w_by // 2, pad_w_by // 2)), 'constant')
+        return gripper_filter
+
+    def get_gripper_filter(self, yaw=0):
+        gripper_filter = rotate(self.gripper_filter,
+                                yaw, reshape=False, order=0)
+        return gripper_filter

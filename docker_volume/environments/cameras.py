@@ -88,7 +88,7 @@ class Oracle():
     intrinsics = (63e4, 0, 320., 0, 63e4, 240., 0, 0, 1)
     # position over the middle of the "board_link"
     position = (0.655, 0, 1000.)
-    rotation = p.getQuaternionFromEuler((0, np.pi, np.pi / 2))
+    rotation = p.getQuaternionFromEuler((np.pi, 0, np.pi / 2))
 
     # Camera config.
     CONFIG = [{

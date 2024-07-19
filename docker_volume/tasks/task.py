@@ -44,7 +44,7 @@ class Task():
 
         self.assets_root = None
 
-    def reset(self, env):  # pylint: disable=unused-argument
+    def reset(self, env):
         if not self.assets_root:
             raise ValueError('assets_root must be set for task, '
                              'call set_assets_root().')
@@ -131,8 +131,6 @@ class Task():
         cmap = np.uint8(cmaps)[0, Ellipsis, :3]
         hmap = np.float32(hmaps)[0, Ellipsis]
         mask = np.int32(cmaps)[0, Ellipsis, 3:].squeeze()
-        plt.imshow(cmap)
-        plt.show()
         return cmap, hmap, mask
 
     def get_random_pose(self, env, obj_size):
