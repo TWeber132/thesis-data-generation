@@ -46,10 +46,6 @@ def main(cfg):
 
     # Collect training data from oracle demonstrations
     while len(synchronized_dataset) < cfg['n']:
-        task.idx_random_pose = 0
-        done = False
-        random_pose_available = (task.idx_random_pose < task.n_random_poses)
-
         seed += 2
         # Unlikely, but a safety check to prevent leaks.
         if task.mode == 'valid' and seed > (-1 + 10000):
@@ -65,9 +61,11 @@ def main(cfg):
         # NOTE: diconnects bullet client to clear memory leakage from "p.loadTexture" inside task.reset()
         env.reset()
 
-        while not done and random_pose_available:
+        done = False
+        n_try = 0
+        while not done and (n_try < task.n_tries):
             print(
-                'Oracle demo: {}/{} | Seed: {} | Try: {}/{}'.format(len(synchronized_dataset) + 1, cfg['n'], seed, task.idx_random_pose + 1, task.n_random_poses))
+                'Oracle demo: {}/{} | Seed: {} | Try: {}/{}'.format(len(synchronized_dataset) + 1, cfg['n'], seed, n_try + 1, task.n_tries))
             # Get initial observation right after restoration of environment
             obs, info = env.restore()
             if obs is not None:
@@ -79,15 +77,13 @@ def main(cfg):
             # if record:
             #     env.start_rec(f'{len(synchronized_dataset)+1:06d}')
 
-            # Rollout "expert" policy
-            act = agent.act(valid_obs, valid_info)
-            random_pose_available = (
-                task.idx_random_pose < task.n_random_poses)
+            act = agent.act(obs, info)
             lang_goal = task.get_lang_goal()
             reward, done = env.step(act)
             steps = env.primitive_steps
             print(
                 f'Total Reward: {reward:.3f} | Done: {done} | Goal: {lang_goal}')
+            n_try += 1
 
         # End video recording
         # if record:

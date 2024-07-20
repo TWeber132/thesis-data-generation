@@ -197,14 +197,14 @@ class Robotiq140():
 
     def create_gripper_filter(self):
         # NOTE: width and height have to be odd
-        gripper_width_px = 41
+        gripper_width_px = 45  # ~ real_width / env.pixel_size
         gripper_height_px = 7
         # Max possible width of image if rotated by 45 degrees
         pad_to = int(gripper_width_px * np.sqrt(2)) + 1
         # NOTE: pad_to has to be odd, so we have a center point to rotate around
         if pad_to % 2 == 0:
             pad_to += 1
-        pad_w_by = pad_to - gripper_width_px # Will always be even
+        pad_w_by = pad_to - gripper_width_px  # Will always be even
         pad_h_by = pad_to - gripper_height_px
 
         gripper_filter = np.zeros(

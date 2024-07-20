@@ -135,11 +135,8 @@ def reconstruct_heightmaps(color, depth, configs, bounds, pixel_size):
 def pix_to_xyz(pixel, height, bounds, pixel_size, skip_height=False):
     """Convert from pixel location on heightmap to 3D position."""
     u, v = pixel
-    # TODO: Why change x and y
-    # x = bounds[0, 0] + v * pixel_size
-    # y = bounds[1, 0] + u * pixel_size
-    x = bounds[0, 0] + u * pixel_size
-    y = bounds[1, 0] + v * pixel_size
+    x = bounds[0, 1] - (u * pixel_size)
+    y = bounds[1, 1] - (v * pixel_size)
     if not skip_height:
         z = bounds[2, 0] + height[u, v]
     else:
@@ -149,11 +146,8 @@ def pix_to_xyz(pixel, height, bounds, pixel_size, skip_height=False):
 
 def xyz_to_pix(position, bounds, pixel_size):
     """Convert from 3D position to pixel location on heightmap."""
-    # TODO: Why change x and y
-    # u = int(np.round((position[1] - bounds[1, 0]) / pixel_size))
-    # v = int(np.round((position[0] - bounds[0, 0]) / pixel_size))
-    u = int(np.round((position[0] - bounds[0, 0]) / pixel_size))
-    v = int(np.round((position[1] - bounds[1, 0]) / pixel_size))
+    u = int(np.round((bounds[1, 1] - position[1]) / pixel_size))
+    v = int(np.round((bounds[0, 1] - position[0]) / pixel_size))
     return (u, v)
 
 
@@ -361,7 +355,6 @@ def get_pose_on_sphere(azimuth, polar, radius, sph_pos):
 def quat_mult(q1, q2):
     q1 = q1[[3, 0, 1, 2]]
     q2 = q2[[3, 0, 1, 2]]
-    print("q1q2", q1, q2)
     res = quaternions.qmult(q1, q2)
     return res[[1, 2, 3, 0]]
 
@@ -382,8 +375,8 @@ def mat_to_quat(mat):
 def get_matrix(pos, quat):
     if isinstance(pos, tuple):
         pos = np.array(pos, dtype=np.float32)
-    if isinstance(pos, tuple):
-        rot = np.array(rot, dtype=np.float32)
+    if isinstance(quat, tuple):
+        quat = np.array(quat, dtype=np.float32)
     matrix = np.eye(4)
     # rearrange xyzw to wxyz
     quat = quat[[3, 0, 1, 2]]
