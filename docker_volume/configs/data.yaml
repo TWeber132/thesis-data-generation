@@ -14,7 +14,7 @@ shared_memory: False
 task: picking-seen-google-objects-seq
 mode: train # 'train' or 'valid' or 'test'
 n_perspectives: 50
-n: 1000 # number of demos to generate
+n: 2504 # number of demos to generate
 save_data: True  # write episodes to disk
 
 dataset:

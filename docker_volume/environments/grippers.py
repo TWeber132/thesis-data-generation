@@ -112,7 +112,7 @@ class Robotiq140():
                 abs(curr_my_right) + abs(curr_mz_right)
 
             if (sum_curr_m_left > targ_m) or (sum_curr_m_right > targ_m):
-                while True:
+                while False:
                     qKey = ord('q')
                     keys = p.getKeyboardEvents()
                     if qKey in keys and keys[qKey] & p.KEY_WAS_TRIGGERED:
@@ -125,7 +125,7 @@ class Robotiq140():
                                     force=1.0)
             self.env.step_simulation()
         print(
-            f'Warning: gripper movet exceeded {timeout} second timeout. Skipping.')
+            f'Warning: gripper move_m exceeded {timeout} second timeout. Skipping.')
         return True
 
     def move_j(self, targ_j: float = 0.0):
@@ -148,7 +148,7 @@ class Robotiq140():
                                     maxVelocity=10)
             self.env.step_simulation()
         print(
-            f'Warning: gripper movej exceeded {timeout} second timeout. Skipping.')
+            f'Warning: gripper move_j exceeded {timeout} second timeout. Skipping.')
         return True
 
     def close(self):

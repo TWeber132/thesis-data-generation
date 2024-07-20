@@ -102,8 +102,8 @@ def main(cfg):
             steps = [get_matrix(step[0], step[1]) for step in steps]
             # The last step (steps[-1]) should be equal to the grasp_pose
             # NOTE: info contains object id : (position, rotation, dimensions, urdf path)
-            # store_to_dataset_language(synchronized_dataset,
-            #                           observations, steps, grasp_pose, info=valid_info, language=lang_goal, seed=seed)
+            store_to_dataset_language(synchronized_dataset,
+                                      observations, steps, grasp_pose, info=valid_info, language=lang_goal, seed=seed)
 
 
 if __name__ == '__main__':

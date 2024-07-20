@@ -34,11 +34,8 @@ def main(cfg):
     # NOTE: The way in which the grasps are shown is not ordered, because of the way files are found by os.listdir()
     # NOTE: It will obviously break things if the task is changed in any way between generation and validation
     # But since it is for validation only, this should suffice
-    for seed in synchronized_dataset.seeds:
-        # Unlikely, but a safety check to prevent leaks.
-        if task.mode == 'valid' and seed > (-1 + 10000):
-            raise Exception(
-                "!!! Seeds for valid set will overlap with the test set !!!")
+    for idx in range(len(synchronized_dataset)):
+        seed = synchronized_dataset.datasets['color'].seeds[idx]
         # Set seeds.
         np.random.seed(seed)
         random.seed(seed)
@@ -52,7 +49,7 @@ def main(cfg):
             env.step_simulation()
 
         # Validate info
-        info = synchronized_dataset.datasets["info"].read_sample(seed)
+        info = synchronized_dataset.datasets["info"].read_sample(idx)
         if info is None:
             print("Info None")
         else:
@@ -61,13 +58,13 @@ def main(cfg):
             print("Info not None")
 
         # Validate goal
-        lang_goal = synchronized_dataset.datasets["language"].read_sample(seed)
+        lang_goal = synchronized_dataset.datasets["language"].read_sample(idx)
         print(f'Goal: {lang_goal}')
 
         # Validate one image
-        color = synchronized_dataset.datasets["color"].read_sample(seed)
+        color = synchronized_dataset.datasets["color"].read_sample(idx)
         # Validate camera config of this one image
-        cam_config = synchronized_dataset.datasets["camera_config"].read_sample(seed)[0][
+        cam_config = synchronized_dataset.datasets["camera_config"].read_sample(idx)[0][
             "pose"]
         pos = cam_config[:3, 3]
         rot = utils.mat_to_quat(cam_config[:3, :3])
@@ -78,31 +75,29 @@ def main(cfg):
         plt.show()
 
         # Validate trajectory
-        steps = synchronized_dataset.datasets["trajectory"].read_sample(seed)[
+        steps = synchronized_dataset.datasets["trajectory"].read_sample(idx)[
             "trajectory"]
-        for i in range(0, len(steps), 10):
-            pos = steps[i][:3, 3]
-            rot = utils.mat_to_quat(steps[i][:3, :3])
+        for step in steps:
+            pos = step[:3, 3]
+            rot = utils.mat_to_quat(step[:3, :3])
             pose = (pos, rot)
             env.add_object(urdf='util/coordinate_axes.urdf',
                            pose=pose, category='fixed')
 
         # Validate grasp_pose
-        hom_mat = synchronized_dataset.datasets["grasp_pose"].read_sample(seed)[
+        hom_mat = synchronized_dataset.datasets["grasp_pose"].read_sample(idx)[
             "grasp_pose"]
         pos = hom_mat[:3, 3]
         rot = utils.mat_to_quat(hom_mat[:3, :3])
-        _act = (pos, rot)
-        # Bring into proper format for pick and place primitive
-        act = {"pose0": _act, "pose1": _act}
-        _obs, reward, done, _info = env.step(act)
+        act = [(pos, rot)]
+        reward, done = env.step(act)
 
         # End video recording
         if record:
             env.end_rec()
 
 
-def load_env_from_info(info):
+def load_env_from_info():
     pass
 
 
