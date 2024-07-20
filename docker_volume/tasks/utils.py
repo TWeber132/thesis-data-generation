@@ -344,8 +344,8 @@ def get_pose_on_sphere(azimuth, polar, radius, sph_pos):
     pos = xyz + sph_pos
     rotm = sphAPR_to_rotm(xyz, azimuth)
     rot = quaternions.mat2quat(rotm)
-    # rotate around y
-    correction = [0.0, 0.0, 1.0, 0.0]
+    # rotate around x by 180 (w|x|yz)
+    correction = [0.0, 1.0, 0.0, 0.0]
     rot = quaternions.qmult(rot, correction)
     # rearrange wxyz to xyzw
     rot = rot[[1, 2, 3, 0]]
