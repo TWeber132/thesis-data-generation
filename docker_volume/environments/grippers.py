@@ -49,8 +49,7 @@ class Robotiq140():
         right_pad_joint_name = 'right_inner_finger_pad_joint'
         self.right_pad_joint_id = [
             joint[0] for joint in _urdf_joints_info if joint[1].decode("utf-8") == right_pad_joint_name][0]
-        left_pad_link_name = 'left_inner_finger_pad'
-        self.left_pad_link_id = []
+
         self.__post_load__()
 
     def __post_load__(self):
@@ -85,7 +84,7 @@ class Robotiq140():
             # Note: the mysterious `erp` is of EXTREME importance
             p.changeConstraint(c, gearRatio=multiplier, maxForce=10000, erp=1)
 
-        # Enable joint force-torque sensor in leading joint
+        # Enable joint force-torque sensor in left and right finger pad
         p.enableJointForceTorqueSensor(bodyUniqueId=self.uid,
                                        jointIndex=self.left_pad_joint_id,
                                        enableSensor=1)

@@ -340,13 +340,13 @@ class PickingSeenGoogleObjectsSeq(Task):
                 self.pick_masks = {}
                 valid_yaws = {}
 
-                """       -90
+                """    -90
                     -> * | *
-                    -      |
+                  -      |
                 0 -______|_______
-                    -      |    
-                    -     |  
-                        - * | *       Gripper (*)
+                  -      |    
+                   -     |  
+                     - * | *       Gripper (*)
                         90
                 """
                 for yaw in range(90, -90, step_size):
