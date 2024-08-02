@@ -6,7 +6,7 @@ import numpy as np
 import random
 
 from simulation.tasks import names as task_names
-from dataset.dataset import store_to_dataset_goal, load_dataset_goal
+from dataset.utils import store_to_dataset_goal, load_dataset_goal
 from simulation.environments.environment import Environment
 from simulation.tasks.utils import get_matrix
 

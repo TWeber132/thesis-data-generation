@@ -6,7 +6,7 @@ import numpy as np
 import random
 
 from simulation.tasks import names as task_names
-from dataset.dataset import load_dataset_language
+from dataset.utils import load_dataset_language
 from simulation.environments.environment import Environment
 from simulation.tasks import utils
 import matplotlib.pyplot as plt

@@ -5,7 +5,7 @@ import hydra
 import numpy as np
 import random
 
-from dataset.dataset import store_to_dataset_language, load_dataset_language
+from dataset.utils import store_to_dataset_language, load_dataset_language
 from simulation.environments.environment import Environment
 from simulation.tasks.utils import get_matrix
 from simulation.tasks import names as task_names
