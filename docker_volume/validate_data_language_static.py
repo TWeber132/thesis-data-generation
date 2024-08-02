@@ -5,7 +5,7 @@ import hydra
 import numpy as np
 import random
 
-import tasks
+from simulation.tasks import names as task_names
 from dataset.dataset import load_dataset_language
 from simulation.environments.environment import Environment
 from simulation.tasks import utils
@@ -22,7 +22,7 @@ def main(cfg):
         hz=480,
         record_cfg=cfg['record']
     )
-    task = tasks.names[cfg['task']]()
+    task = task_names[cfg['task']]()
     task.mode = cfg['mode']
     record = cfg['record']['save_video']
     n_perspectives = cfg['n_perspectives']

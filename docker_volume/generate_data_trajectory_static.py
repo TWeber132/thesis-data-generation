@@ -5,7 +5,7 @@ import hydra
 import numpy as np
 import random
 
-import tasks
+from simulation.tasks import names as task_names
 from dataset.dataset import store_to_dataset_trajectory, load_dataset_trajectory
 from simulation.environments.environment import Environment
 from simulation.tasks.utils import get_matrix
@@ -21,7 +21,7 @@ def main(cfg):
         hz=480,
         record_cfg=cfg['record']
     )
-    task = tasks.names[cfg['task']]()
+    task = task_names[cfg['task']]()
     task.mode = cfg['mode']
     record = cfg['record']['save_video']
     save_data = cfg['save_data']
