@@ -7,12 +7,12 @@ import random
 
 import tasks
 from dataset.dataset import load_dataset_language
-from environments.environment import Environment
-from tasks import utils
+from simulation.environments.environment import Environment
+from simulation.tasks import utils
 import matplotlib.pyplot as plt
 
 
-@hydra.main(config_path='/home/robot/docker_volume/configs', config_name='data')
+@hydra.main(config_path='/home/robot/docker_volume/simulation/configs', config_name='data')
 def main(cfg):
     # Initialize environment and task.
     env = Environment(

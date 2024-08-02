@@ -5,13 +5,13 @@ import hydra
 import numpy as np
 import random
 
-import tasks
 from dataset.dataset import store_to_dataset_language, load_dataset_language
-from environments.environment import Environment
-from tasks.utils import get_matrix
+from simulation.environments.environment import Environment
+from simulation.tasks.utils import get_matrix
+from simulation.tasks import names as task_names
 
 
-@hydra.main(config_path='/home/robot/docker_volume/configs', config_name='data')
+@hydra.main(config_path='/home/robot/docker_volume/simulation/configs', config_name='data')
 def main(cfg):
     # Initialize environment and task.
     env = Environment(
@@ -21,7 +21,7 @@ def main(cfg):
         hz=480,
         record_cfg=cfg['record']
     )
-    task = tasks.names[cfg['task']]()
+    task = task_names[cfg['task']]()
     task.mode = cfg['mode']
     # record = cfg['record']['save_video']
     save_data = cfg['save_data']
