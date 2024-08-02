@@ -1,15 +1,16 @@
-"""Data collection script."""
-
 import os
+import sys
 import hydra
 import numpy as np
 import random
 
-from simulation.tasks import names as task_names
 from dataset.utils import load_dataset_language
 from simulation.environments.environment import Environment
 from simulation.tasks import utils
+from simulation.tasks.picking_google_objects import PickingSeenGoogleObjectsSeq
 import matplotlib.pyplot as plt
+
+task_names = {"picking-seen-google-objects-seq": PickingSeenGoogleObjectsSeq}
 
 
 @hydra.main(config_path='/home/robot/docker_volume/simulation/configs', config_name='data')
@@ -22,6 +23,7 @@ def main(cfg):
         hz=480,
         record_cfg=cfg['record']
     )
+
     task = task_names[cfg['task']]()
     task.mode = cfg['mode']
     record = cfg['record']['save_video']
