@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 task_names = {"picking-seen-google-objects-seq": PickingSeenGoogleObjectsSeq}
 
 
-@hydra.main(config_path='/home/robot/docker_volume/simulation/configs', config_name='data')
+@hydra.main(config_path='/home/robot/docker_volume/configs', config_name='data')
 def main(cfg):
     # Initialize environment and task.
     env = Environment(

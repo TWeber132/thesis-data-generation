@@ -8,10 +8,12 @@ import random
 from dataset.utils import store_to_dataset_language, load_dataset_language
 from simulation.environments.environment import Environment
 from simulation.tasks.utils import get_matrix
-from simulation.tasks import names as task_names
+from simulation.tasks.picking_google_objects import PickingSeenGoogleObjectsSeq
+
+task_names = {"picking-seen-google-objects-seq": PickingSeenGoogleObjectsSeq}
 
 
-@hydra.main(config_path='/home/robot/docker_volume/simulation/configs', config_name='data')
+@hydra.main(config_path='/home/robot/docker_volume/configs', config_name='data')
 def main(cfg):
     # Initialize environment and task.
     env = Environment(
