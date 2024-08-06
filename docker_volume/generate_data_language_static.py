@@ -8,9 +8,9 @@ import random
 from dataset.utils import store_to_dataset_language, load_dataset_language
 from simulation.environments.environment import Environment
 from simulation.tasks.utils import get_matrix
-from simulation.tasks.picking_google_objects import PickingSeenGoogleObjectsSeq
+from simulation.tasks.picking_google_objects import PickSeenGoogleObjects
 
-task_names = {"picking-seen-google-objects-seq": PickingSeenGoogleObjectsSeq}
+task_names = {"pick-seen-google-objects": PickSeenGoogleObjects}
 
 
 @hydra.main(config_path='/home/robot/docker_volume/configs', config_name='data')
@@ -65,9 +65,10 @@ def main(cfg):
 
         done = False
         n_try = 0
-        while not done and (n_try < task.n_tries):
+        max_tries = 50
+        while not done and (n_try < max_tries):
             print(
-                'Oracle demo: {}/{} | Seed: {} | Try: {}/{}'.format(len(synchronized_dataset) + 1, cfg['n'], seed, n_try + 1, task.n_tries))
+                'Oracle demo: {}/{} | Seed: {} | Try: {}/{}'.format(len(synchronized_dataset) + 1, cfg['n'], seed, n_try + 1, max_tries))
             # Get initial observation right after restoration of environment
             obs, info = env.restore()
             if obs is not None:
