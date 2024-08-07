@@ -6,7 +6,7 @@ import numpy as np
 import random
 
 from dataset.utils import store_to_dataset_language, load_dataset_language
-from simulation.environments.environment import Environment
+from simulation.environments.ur10e_cell import UR10ECell
 from simulation.tasks.utils import get_matrix
 from simulation.tasks.picking_google_objects import PickSeenGoogleObjects
 
@@ -16,16 +16,15 @@ task_names = {"pick-seen-google-objects": PickSeenGoogleObjects}
 @hydra.main(config_path='/home/robot/docker_volume/configs', config_name='data')
 def main(cfg):
     # Initialize environment and task.
-    env = Environment(
+    env = UR10ECell(
         cfg['assets_root'],
         disp=cfg['disp'],
-        shared_memory=cfg['shared_memory'],
         hz=480,
         record_cfg=cfg['record']
     )
     task = task_names[cfg['task']]()
     task.mode = cfg['mode']
-    # record = cfg['record']['save_video']
+    record = cfg['record']['save_video']
     save_data = cfg['save_data']
     n_perspectives = cfg['n_perspectives']
 

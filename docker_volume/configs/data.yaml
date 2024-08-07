@@ -10,7 +10,6 @@ hydra:
 data_dir: ${shared_docker_volume_dir}/storage/data  # where to store dataset
 assets_root: ${docker_volume_dir}/simulation/assets/
 disp: True  # visualize PyBullet
-shared_memory: False
 task: pick-seen-google-objects
 mode: test # 'train' or 'valid' or 'test'
 n_perspectives: 50
