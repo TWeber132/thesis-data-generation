@@ -5,21 +5,20 @@ import numpy as np
 import random
 
 from dataset.utils import load_dataset_language
-from simulation.environments.environment import Environment
+from simulation.environments.ur10e_cell import UR10ECell
 from simulation.tasks import utils
-from simulation.tasks.picking_google_objects import PickingSeenGoogleObjectsSeq
+from simulation.tasks.picking_google_objects import PickSeenGoogleObjects
 import matplotlib.pyplot as plt
 
-task_names = {"picking-seen-google-objects-seq": PickingSeenGoogleObjectsSeq}
+task_names = {"pick-seen-google-objects": PickSeenGoogleObjects}
 
 
 @hydra.main(config_path='/home/robot/docker_volume/configs', config_name='data')
 def main(cfg):
     # Initialize environment and task.
-    env = Environment(
+    env = UR10ECell(
         cfg['assets_root'],
         disp=cfg['disp'],
-        shared_memory=cfg['shared_memory'],
         hz=480,
         record_cfg=cfg['record']
     )
@@ -74,7 +73,6 @@ def main(cfg):
         env.add_object(urdf='util/coordinate_axes.urdf',
                        pose=pose, category='fixed')
         plt.imshow(color[0])
-        plt.show()
 
         # Validate trajectory
         steps = synchronized_dataset.datasets["trajectory"].read_sample(idx)[
@@ -85,6 +83,8 @@ def main(cfg):
             pose = (pos, rot)
             env.add_object(urdf='util/coordinate_axes.urdf',
                            pose=pose, category='fixed')
+
+        plt.show()
 
         # Validate grasp_pose
         hom_mat = synchronized_dataset.datasets["grasp_pose"].read_sample(idx)[
